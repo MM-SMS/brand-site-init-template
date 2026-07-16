@@ -7,24 +7,28 @@ This repo is a clean starting point for a new brand site, cloned each time a new
 - Next.js (App Router) + TypeScript
 - Tailwind v4, design tokens as CSS variables in `app/globals.css`
 - shadcn/ui primitives (config in `components.json`) — only `components/ui/button.tsx` is included; add more with `npx shadcn@latest add <component>` rather than hand-writing them, so they stay consistent with the project's shadcn config
-- `redirections-lp-setup` (private git dependency) for landing-page redirects — wire up routes for it as the brand needs them
+- Subscription forms (email/SMS) via Resend + Textbelt + Cloudflare Turnstile
+- `redirections-lp-setup` (private git dependency) for landing-page redirects — wire up routes for it as the brand needs them; `/expired` and `not-found` are ready for campaign fallbacks
 - No auth or CMS by default. Only add Supabase/Sanity back if this specific brand actually needs login or a CMS — don't restore them out of habit
 
 ## First things to customize for a new brand
 
-1. `lib/constants.ts` — the `BRAND` object (name, tagline, contact email, domain). Everything else in the template reads from here.
+1. `lib/constants.ts` — the `BRAND` and `LEGAL` objects (name, tagline, contact email, domain, entity details). Everything else in the template reads from here.
 2. `app/globals.css` — the CSS variables under `:root` (`--background`, `--primary`, etc.) define the brand's color palette.
 3. `app/layout.tsx` — swap the font if the brand needs something other than Inter.
 4. `app/page.tsx`, `app/about/page.tsx`, `app/contact/page.tsx` — placeholder copy, replace with real content.
+5. `.env.local` — copy from `.env.example` (Turnstile, Resend, optional Textbelt, `SITE_URL`).
 
 ## Folder structure
 
-- `app/` — routes. `page.tsx` (home), `about/`, `contact/` exist; add more route folders as needed.
+- `app/` — routes. Home, about, contact, subscribe, unsubscribe, privacy, terms, expired; plus `not-found.tsx` for 404 / unknown campaign links. API under `app/api/subscription/`.
 - `components/layout/` — `header.tsx`, `footer.tsx`.
+- `components/forms/` — subscribe form body, Turnstile, auto-opening subscribe modal.
+- `components/legal/` — shared legal page helpers.
 - `components/ui/` — shadcn primitives, add via the CLI.
 - `data/` — empty placeholder, for static/seed data (e.g. content config) once the brand needs it.
 - `hooks/` — empty placeholder, for shared React hooks once the brand needs them.
-- `lib/` — `utils.ts` (`cn` helper) and `constants.ts` (brand config). Add `lib/supabase/`, `lib/sanity/`, `lib/services/` etc. back here if the brand needs them.
+- `lib/` — `utils.ts`, `constants.ts`, `subscription-client.ts`, `subscription-modal.ts`.
 - `public/` — empty placeholder, for static assets (icons, images).
 - `scripts/` — empty placeholder, for DB migrations if the brand adds a database.
 - `styles/` — empty placeholder, reserved for extra stylesheets outside `app/globals.css`.

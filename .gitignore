@@ -15,3 +15,7 @@ node_modules
 .next/
 .DS_Store
 .vercel
+*.tsbuildinfo
+
+# Local reference copy — not part of the template
+brand-site-init-template/

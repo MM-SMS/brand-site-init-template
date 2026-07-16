@@ -17,6 +17,7 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "redirections-lp-setup": "git+ssh://git@github.com/MM-SMS/redirections-lp-setup.git",
+    "resend": "^6.17.2",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
