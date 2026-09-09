@@ -92,7 +92,7 @@ Full opt-in / opt-out loop:
 
 **Form fields:** first/last name, email, phone, email / SMS / marketing / Terms+Privacy checkboxes, Cloudflare Turnstile.
 
-**Validation:** email required when email consent is checked; phone required for SMS/marketing; Terms required; captcha required.
+**Validation:** comes from `subscribe-form-config` (`{field}_required` in Notion; hidden fields are never required). Also: email required when email consent is checked; phone required for SMS/marketing; captcha required.
 
 **Auto modal:**
 
@@ -109,6 +109,16 @@ Full opt-in / opt-out loop:
 4. Admin notification to `RESEND_FORWARD_EMAIL`
 
 Email HTML lives in `app/api/subscription/_lib/emails/templates.ts` — brand-neutral, pulls name/tagline/address from `BRAND` / `LEGAL`.
+
+### Subscribe form remote config (Notion)
+
+Field labels, checkbox copy, visibility, and required flags come from the shared package [`subscribe-form-config`](https://github.com/MM-SMS/opt-in-form-settings-script) (`opt-in-form-settings-script`). Site adapter: `lib/subscribe-form-server.ts`.
+
+```bash
+npm i github:MM-SMS/opt-in-form-settings-script#main @notionhq/client
+```
+
+Without `NOTION_TOKEN` / `NOTION_SUBSCRIBE_FORM_DB_ID` the form uses package defaults. Hidden fields are not rendered; submit still sends `''` / `false`. See the [package README](https://github.com/MM-SMS/opt-in-form-settings-script) for the Notion column layout.
 
 ### Legal
 

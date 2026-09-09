@@ -7,6 +7,7 @@ import { CheckCircle, ArrowLeft, Mail, Bell, Shield } from 'lucide-react'
 import { SubscribeFormBody, validateSubscribeForm } from '@/components/forms/subscribe-form-body'
 import { Button } from '@/components/ui/button'
 import { BRAND } from '@/lib/constants'
+import type { SubscribeFormConfig } from 'subscribe-form-config/client'
 import { submitSubscribe } from '@/lib/subscription-client'
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error'
@@ -17,7 +18,11 @@ const BENEFITS = [
   { icon: Shield, title: 'Your control', desc: 'Unsubscribe any time. We do not sell your data.' },
 ]
 
-export default function SubscribePage() {
+interface SubscribePageProps {
+  formConfig?: SubscribeFormConfig
+}
+
+export default function SubscribePage({ formConfig }: SubscribePageProps) {
   const searchParams = useSearchParams()
   const [formState, setFormState] = useState<FormState>('idle')
 
@@ -61,6 +66,7 @@ export default function SubscribePage() {
       cbMarketing,
       cbTerms,
       captchaToken,
+      formConfig,
     })
     if (Object.keys(errs).length > 0) {
       setErrors(errs)
@@ -152,6 +158,7 @@ export default function SubscribePage() {
             formState={formState}
             submitLabel={`Subscribe to ${BRAND.name}`}
             onSubmit={handleSubmit}
+            formConfig={formConfig}
           />
         </div>
       </div>

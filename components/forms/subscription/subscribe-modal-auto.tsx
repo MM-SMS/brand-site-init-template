@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { SubscribeModal } from '@/components/forms/subscription/subscribe-modal'
 import { ROUTES } from '@/lib/constants'
+import { useSubscribeFormConfig } from 'subscribe-form-config/client'
 import {
   getSubscribeModalDelayMs,
   recordSubscribeModalShown,
@@ -22,6 +23,7 @@ const EXCLUDED_PATHS = [
 export function SubscribeModalAuto() {
   const pathname = usePathname()
   const [showAutoModal, setShowAutoModal] = useState(false)
+  const formConfig = useSubscribeFormConfig()
 
   const isExcluded = EXCLUDED_PATHS.some(
     (path) => pathname === path || pathname.startsWith(`${path}/`),
@@ -44,5 +46,11 @@ export function SubscribeModalAuto() {
 
   if (!showAutoModal) return null
 
-  return <SubscribeModal onClose={() => setShowAutoModal(false)} source="auto-modal" />
+  return (
+    <SubscribeModal
+      onClose={() => setShowAutoModal(false)}
+      source="auto-modal"
+      formConfig={formConfig}
+    />
+  )
 }

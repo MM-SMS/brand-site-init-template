@@ -4,6 +4,7 @@ import { useState, type FormEvent } from 'react'
 import { X, CheckCircle, Mail, Bell, Shield } from 'lucide-react'
 import { SubscribeFormBody, validateSubscribeForm } from '@/components/forms/subscribe-form-body'
 import { BRAND } from '@/lib/constants'
+import type { SubscribeFormConfig } from 'subscribe-form-config/client'
 import { submitSubscribe } from '@/lib/subscription-client'
 
 const MODAL_BENEFITS = [
@@ -15,11 +16,16 @@ const MODAL_BENEFITS = [
 interface SubscribeModalProps {
   onClose: () => void
   source?: string
+  formConfig?: SubscribeFormConfig
 }
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error'
 
-export function SubscribeModal({ onClose, source = 'modal' }: SubscribeModalProps) {
+export function SubscribeModal({
+  onClose,
+  source = 'modal',
+  formConfig,
+}: SubscribeModalProps) {
   const [formState, setFormState] = useState<FormState>('idle')
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
 
@@ -54,6 +60,7 @@ export function SubscribeModal({ onClose, source = 'modal' }: SubscribeModalProp
       cbMarketing,
       cbTerms,
       captchaToken,
+      formConfig,
     })
     if (Object.keys(errs).length > 0) {
       setErrors(errs)
@@ -157,6 +164,7 @@ export function SubscribeModal({ onClose, source = 'modal' }: SubscribeModalProp
               formState={formState}
               submitLabel={`Subscribe to ${BRAND.name}`}
               onSubmit={handleSubmit}
+              formConfig={formConfig}
             />
           </div>
         )}

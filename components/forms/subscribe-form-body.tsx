@@ -4,9 +4,15 @@ import { type FormEvent } from 'react'
 import Link from 'next/link'
 import { Mail, Phone, User, AlertCircle } from 'lucide-react'
 import { CloudflareTurnstile } from '@/components/forms/turnstile'
-import { SMS_CONSENT_TEXT } from '@/components/forms/subscription/consent-copy'
 import { Button } from '@/components/ui/button'
 import { BRAND } from '@/lib/constants'
+import { buildDefaultSubscribeFormConfig } from 'subscribe-form-config'
+import {
+  isSubscribeFieldRequired,
+  isSubscribeFieldVisible,
+  subscribeFieldText,
+  type SubscribeFormConfig,
+} from 'subscribe-form-config/client'
 import { cn } from '@/lib/utils'
 
 export interface SubscribeFormState {
@@ -33,6 +39,8 @@ export interface SubscribeFormState {
   formState: 'idle' | 'submitting' | 'success' | 'error'
   submitLabel?: string
   onSubmit: (e: FormEvent) => void
+  /** Remote / Notion-driven visibility + copy. Defaults used when omitted. */
+  formConfig?: SubscribeFormConfig
 }
 
 function TermsLink() {
@@ -108,9 +116,30 @@ export function SubscribeFormBody({
   formState,
   submitLabel = `Subscribe to ${BRAND.name}`,
   onSubmit,
+  formConfig,
 }: SubscribeFormState) {
-  const emailRequired = cbEmail
-  const phoneRequired = cbSms || cbMarketing
+  const config =
+    formConfig ??
+    buildDefaultSubscribeFormConfig({
+      name: BRAND.name,
+      domain: BRAND.domain,
+      legalEntity: BRAND.legalEntity,
+    })
+  const show = (key: Parameters<typeof isSubscribeFieldVisible>[1]) =>
+    isSubscribeFieldVisible(config, key)
+  const need = (key: Parameters<typeof isSubscribeFieldRequired>[1]) =>
+    isSubscribeFieldRequired(config, key)
+  const label = (key: Parameters<typeof subscribeFieldText>[1], fallback: string) =>
+    subscribeFieldText(config, key, fallback)
+
+  const emailRequired = need('email') || (show('cbEmail') && cbEmail)
+  const phoneRequired =
+    need('phone') || (show('cbSms') && cbSms) || (show('cbMarketing') && cbMarketing)
+
+  const showNameRow = show('firstName') || show('lastName')
+  const showContactRow = show('email') || show('phone')
+  const showPrefs =
+    show('cbEmail') || show('cbSms') || show('cbMarketing') || show('cbTerms')
 
   const inputClass = (field: string) =>
     cn(
@@ -130,185 +159,251 @@ export function SubscribeFormBody({
 
   return (
     <form onSubmit={onSubmit} className="space-y-5">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label className="mb-2 block text-sm font-medium">
-            <span className="inline-flex items-center gap-1.5">
-              <User className="size-3.5" /> First name *
-            </span>
-          </label>
-          <input
-            type="text"
-            value={firstName}
-            onChange={(e) => {
-              setFirstName(e.target.value)
-              clearError('firstName')
-            }}
-            placeholder="First name"
-            className={inputClass('firstName')}
-            autoComplete="given-name"
-          />
-          {errors.firstName && <p className="mt-1 text-xs text-destructive">{errors.firstName}</p>}
-        </div>
-        <div>
-          <label className="mb-2 block text-sm font-medium">
-            <span className="inline-flex items-center gap-1.5">
-              <User className="size-3.5" /> Last name *
-            </span>
-          </label>
-          <input
-            type="text"
-            value={lastName}
-            onChange={(e) => {
-              setLastName(e.target.value)
-              clearError('lastName')
-            }}
-            placeholder="Last name"
-            className={inputClass('lastName')}
-            autoComplete="family-name"
-          />
-          {errors.lastName && <p className="mt-1 text-xs text-destructive">{errors.lastName}</p>}
-        </div>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label className="mb-2 block text-sm font-medium">
-            <span className="inline-flex items-center gap-1.5">
-              <Mail className="size-3.5" /> Email
-              {emailRequired ? (
-                <span className="text-primary">*</span>
-              ) : (
-                <span className="text-xs text-muted-foreground">(optional)</span>
+      {showNameRow && (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {show('firstName') && (
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                <span className="inline-flex items-center gap-1.5">
+                  <User className="size-3.5" /> {label('firstName', 'First name')}
+                  {need('firstName') ? (
+                    <span className="text-primary">*</span>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">(optional)</span>
+                  )}
+                </span>
+              </label>
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => {
+                  setFirstName(e.target.value)
+                  clearError('firstName')
+                }}
+                placeholder="First name"
+                className={inputClass('firstName')}
+                autoComplete="given-name"
+              />
+              {errors.firstName && (
+                <p className="mt-1 text-xs text-destructive">{errors.firstName}</p>
               )}
-            </span>
-          </label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value)
-              clearError('email')
-              clearError('cbEmail')
-            }}
-            placeholder={`you@${BRAND.domain}`}
-            className={inputClass('email')}
-            autoComplete="email"
-          />
-          {errors.email && <p className="mt-1 text-xs text-destructive">{errors.email}</p>}
-        </div>
-        <div>
-          <label className="mb-2 block text-sm font-medium">
-            <span className="inline-flex items-center gap-1.5">
-              <Phone className="size-3.5" /> Phone
-              {phoneRequired ? (
-                <span className="text-primary">*</span>
-              ) : (
-                <span className="text-xs text-muted-foreground">(optional)</span>
+            </div>
+          )}
+          {show('lastName') && (
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                <span className="inline-flex items-center gap-1.5">
+                  <User className="size-3.5" /> {label('lastName', 'Last name')}
+                  {need('lastName') ? (
+                    <span className="text-primary">*</span>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">(optional)</span>
+                  )}
+                </span>
+              </label>
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => {
+                  setLastName(e.target.value)
+                  clearError('lastName')
+                }}
+                placeholder="Last name"
+                className={inputClass('lastName')}
+                autoComplete="family-name"
+              />
+              {errors.lastName && (
+                <p className="mt-1 text-xs text-destructive">{errors.lastName}</p>
               )}
-            </span>
-          </label>
-          <input
-            type="tel"
-            value={phone}
-            onChange={(e) => {
-              setPhone(e.target.value)
-              clearError('phone')
-              clearError('cbSms')
-              clearError('cbMarketing')
-            }}
-            placeholder="+1 (555) 000-0000"
-            className={inputClass('phone')}
-            autoComplete="tel"
-          />
-          {errors.phone && <p className="mt-1 text-xs text-destructive">{errors.phone}</p>}
+            </div>
+          )}
         </div>
-      </div>
+      )}
 
-      <div className="space-y-3 border-t border-border pt-5">
-        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          Communication preferences
-        </p>
+      {showContactRow && (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {show('email') && (
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                <span className="inline-flex items-center gap-1.5">
+                  <Mail className="size-3.5" /> {label('email', 'Email')}
+                  {emailRequired ? (
+                    <span className="text-primary">*</span>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">(optional)</span>
+                  )}
+                </span>
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  clearError('email')
+                  clearError('cbEmail')
+                }}
+                placeholder={`you@${BRAND.domain}`}
+                className={inputClass('email')}
+                autoComplete="email"
+              />
+              {errors.email && <p className="mt-1 text-xs text-destructive">{errors.email}</p>}
+            </div>
+          )}
+          {show('phone') && (
+            <div>
+              <label className="mb-2 block text-sm font-medium">
+                <span className="inline-flex items-center gap-1.5">
+                  <Phone className="size-3.5" /> {label('phone', 'Phone')}
+                  {phoneRequired ? (
+                    <span className="text-primary">*</span>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">(optional)</span>
+                  )}
+                </span>
+              </label>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => {
+                  setPhone(e.target.value)
+                  clearError('phone')
+                  clearError('cbSms')
+                  clearError('cbMarketing')
+                }}
+                placeholder="+1 (555) 000-0000"
+                className={inputClass('phone')}
+                autoComplete="tel"
+              />
+              {errors.phone && <p className="mt-1 text-xs text-destructive">{errors.phone}</p>}
+            </div>
+          )}
+        </div>
+      )}
 
-        <label
-          className="group flex cursor-pointer items-start gap-3"
-          onClick={() => {
-            setCbEmail((v) => !v)
-            clearError('cbEmail')
-          }}
-        >
-          <div className={checkboxClass(cbEmail, !!errors.cbEmail)}>
-            {cbEmail && <span className="text-[10px] font-bold">✓</span>}
-          </div>
-          <span className={cn('text-sm leading-snug', errors.cbEmail && !cbEmail && 'text-destructive')}>
-            I consent to receive emails from {BRAND.name}. Frequency varies. You can unsubscribe any
-            time. <TermsPrivacyLinks />
-          </span>
-        </label>
-        {errors.cbEmail && !cbEmail && <p className="pl-7 text-xs text-destructive">{errors.cbEmail}</p>}
+      {showPrefs && (
+        <div className="space-y-3 border-t border-border pt-5">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            Communication preferences
+          </p>
 
-        <label
-          className="group flex cursor-pointer items-start gap-3"
-          onClick={() => {
-            setCbSms((v) => !v)
-            clearError('cbSms')
-          }}
-        >
-          <div className={checkboxClass(cbSms, !!errors.cbSms)}>
-            {cbSms && <span className="text-[10px] font-bold">✓</span>}
-          </div>
-          <span
-            className={cn(
-              'text-sm leading-snug text-muted-foreground',
-              errors.cbSms && !cbSms && 'text-destructive',
-            )}
-          >
-            {SMS_CONSENT_TEXT} See details: <TermsPrivacyLinks />
-          </span>
-        </label>
-        {errors.cbSms && !cbSms && <p className="pl-7 text-xs text-destructive">{errors.cbSms}</p>}
+          {show('cbEmail') && (
+            <>
+              <label
+                className="group flex cursor-pointer items-start gap-3"
+                onClick={() => {
+                  setCbEmail((v) => !v)
+                  clearError('cbEmail')
+                }}
+              >
+                <div className={checkboxClass(cbEmail, !!errors.cbEmail)}>
+                  {cbEmail && <span className="text-[10px] font-bold">✓</span>}
+                </div>
+                <span
+                  className={cn(
+                    'text-sm leading-snug',
+                    errors.cbEmail && !cbEmail && 'text-destructive',
+                  )}
+                >
+                  {label('cbEmail', 'I consent to receive emails.')} <TermsPrivacyLinks />
+                  {need('cbEmail') && <span className="text-destructive"> *</span>}
+                </span>
+              </label>
+              {errors.cbEmail && !cbEmail && (
+                <p className="pl-7 text-xs text-destructive">{errors.cbEmail}</p>
+              )}
+            </>
+          )}
 
-        <label
-          className="group flex cursor-pointer items-start gap-3"
-          onClick={() => {
-            setCbMarketing((v) => !v)
-            clearError('cbMarketing')
-          }}
-        >
-          <div className={checkboxClass(cbMarketing, !!errors.cbMarketing)}>
-            {cbMarketing && <span className="text-[10px] font-bold">✓</span>}
-          </div>
-          <span
-            className={cn(
-              'text-sm leading-snug text-muted-foreground',
-              errors.cbMarketing && !cbMarketing && 'text-destructive',
-            )}
-          >
-            I consent to receive marketing communications and promotions to the phone number provided.
-            See details: <TermsPrivacyLinks />
-          </span>
-        </label>
-        {errors.cbMarketing && !cbMarketing && (
-          <p className="pl-7 text-xs text-destructive">{errors.cbMarketing}</p>
-        )}
+          {show('cbSms') && (
+            <>
+              <label
+                className="group flex cursor-pointer items-start gap-3"
+                onClick={() => {
+                  setCbSms((v) => !v)
+                  clearError('cbSms')
+                }}
+              >
+                <div className={checkboxClass(cbSms, !!errors.cbSms)}>
+                  {cbSms && <span className="text-[10px] font-bold">✓</span>}
+                </div>
+                <span
+                  className={cn(
+                    'text-sm leading-snug text-muted-foreground',
+                    errors.cbSms && !cbSms && 'text-destructive',
+                  )}
+                >
+                  {label('cbSms', 'I consent to receive SMS.')} See details: <TermsPrivacyLinks />
+                  {need('cbSms') && <span className="text-destructive"> *</span>}
+                </span>
+              </label>
+              {errors.cbSms && !cbSms && (
+                <p className="pl-7 text-xs text-destructive">{errors.cbSms}</p>
+              )}
+            </>
+          )}
 
-        <label
-          className="group flex cursor-pointer items-start gap-3"
-          onClick={() => {
-            setCbTerms((v) => !v)
-            clearError('cbTerms')
-          }}
-        >
-          <div className={checkboxClass(cbTerms, !!errors.cbTerms)}>
-            {cbTerms && <span className="text-[10px] font-bold">✓</span>}
-          </div>
-          <span className={cn('text-sm leading-snug', errors.cbTerms && !cbTerms && 'text-destructive')}>
-            I accept the <TermsLink /> and <PrivacyLink />.{' '}
-            <span className="text-destructive">*</span>
-          </span>
-        </label>
-        {errors.cbTerms && !cbTerms && <p className="pl-7 text-xs text-destructive">{errors.cbTerms}</p>}
-      </div>
+          {show('cbMarketing') && (
+            <>
+              <label
+                className="group flex cursor-pointer items-start gap-3"
+                onClick={() => {
+                  setCbMarketing((v) => !v)
+                  clearError('cbMarketing')
+                }}
+              >
+                <div className={checkboxClass(cbMarketing, !!errors.cbMarketing)}>
+                  {cbMarketing && <span className="text-[10px] font-bold">✓</span>}
+                </div>
+                <span
+                  className={cn(
+                    'text-sm leading-snug text-muted-foreground',
+                    errors.cbMarketing && !cbMarketing && 'text-destructive',
+                  )}
+                >
+                  {label(
+                    'cbMarketing',
+                    'I consent to receive marketing communications and promotions to the phone number provided.',
+                  )}{' '}
+                  See details: <TermsPrivacyLinks />
+                  {need('cbMarketing') && <span className="text-destructive"> *</span>}
+                </span>
+              </label>
+              {errors.cbMarketing && !cbMarketing && (
+                <p className="pl-7 text-xs text-destructive">{errors.cbMarketing}</p>
+              )}
+            </>
+          )}
+
+          {show('cbTerms') && (
+            <>
+              <label
+                className="group flex cursor-pointer items-start gap-3"
+                onClick={() => {
+                  setCbTerms((v) => !v)
+                  clearError('cbTerms')
+                }}
+              >
+                <div className={checkboxClass(cbTerms, !!errors.cbTerms)}>
+                  {cbTerms && <span className="text-[10px] font-bold">✓</span>}
+                </div>
+                <span
+                  className={cn(
+                    'text-sm leading-snug',
+                    errors.cbTerms && !cbTerms && 'text-destructive',
+                  )}
+                >
+                  {label('cbTerms', 'I accept the Terms & Conditions and Privacy Policy.')}{' '}
+                  <TermsLink /> / <PrivacyLink />
+                  {need('cbTerms') && <span className="text-destructive"> *</span>}
+                </span>
+              </label>
+              {errors.cbTerms && !cbTerms && (
+                <p className="pl-7 text-xs text-destructive">{errors.cbTerms}</p>
+              )}
+            </>
+          )}
+        </div>
+      )}
 
       <div>
         <CloudflareTurnstile
@@ -350,6 +445,7 @@ export function validateSubscribeForm({
   cbMarketing,
   cbTerms,
   captchaToken,
+  formConfig,
 }: {
   firstName: string
   lastName: string
@@ -360,24 +456,57 @@ export function validateSubscribeForm({
   cbMarketing: boolean
   cbTerms: boolean
   captchaToken: string | null
+  formConfig?: SubscribeFormConfig
 }): Record<string, string> {
+  const config =
+    formConfig ??
+    buildDefaultSubscribeFormConfig({
+      name: BRAND.name,
+      domain: BRAND.domain,
+      legalEntity: BRAND.legalEntity,
+    })
+  const show = (key: Parameters<typeof isSubscribeFieldVisible>[1]) =>
+    isSubscribeFieldVisible(config, key)
+  const need = (key: Parameters<typeof isSubscribeFieldRequired>[1]) =>
+    isSubscribeFieldRequired(config, key)
+
   const e: Record<string, string> = {}
-  if (!firstName.trim()) e.firstName = 'First name is required'
-  if (!lastName.trim()) e.lastName = 'Last name is required'
 
-  if (email.trim() && !cbEmail) e.cbEmail = 'You entered an email — please select email consent above'
-  if (cbEmail && !email.trim()) e.email = 'Email is required when email consent is selected'
-  if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = 'Enter a valid email address'
+  if (need('firstName') && !firstName.trim()) e.firstName = 'First name is required'
+  if (need('lastName') && !lastName.trim()) e.lastName = 'Last name is required'
 
-  if (phone.trim()) {
-    if (!cbSms) e.cbSms = 'Required when a phone number is provided'
-    if (!cbMarketing) e.cbMarketing = 'Required when a phone number is provided'
+  if (show('email') || show('cbEmail')) {
+    if (need('email') && !email.trim()) e.email = 'Email is required'
+    if (email.trim() && show('cbEmail') && !cbEmail) {
+      e.cbEmail = 'You entered an email — please select email consent above'
+    }
+    if (show('cbEmail') && cbEmail && !email.trim()) {
+      e.email = 'Email is required when email consent is selected'
+    }
+    if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      e.email = 'Enter a valid email address'
+    }
   }
-  if ((cbSms || cbMarketing) && !phone.trim()) {
-    e.phone = 'Phone number is required when SMS consent is selected'
+
+  if (show('phone') || show('cbSms') || show('cbMarketing')) {
+    if (need('phone') && !phone.trim()) e.phone = 'Phone number is required'
+    if (phone.trim()) {
+      if (show('cbSms') && !cbSms) e.cbSms = 'Required when a phone number is provided'
+      if (show('cbMarketing') && !cbMarketing) {
+        e.cbMarketing = 'Required when a phone number is provided'
+      }
+    }
+    if (((show('cbSms') && cbSms) || (show('cbMarketing') && cbMarketing)) && !phone.trim()) {
+      e.phone = 'Phone number is required when SMS consent is selected'
+    }
   }
 
-  if (!cbTerms) e.cbTerms = 'You must accept the Terms & Conditions and Privacy Policy'
+  if (need('cbEmail') && !cbEmail) e.cbEmail = 'Email consent is required'
+  if (need('cbSms') && !cbSms) e.cbSms = 'SMS consent is required'
+  if (need('cbMarketing') && !cbMarketing) e.cbMarketing = 'Marketing consent is required'
+  if (need('cbTerms') && !cbTerms) {
+    e.cbTerms = 'You must accept the Terms & Conditions and Privacy Policy'
+  }
   if (!captchaToken) e.captcha = 'Please complete the security check'
   return e
 }

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { isSubscribeFieldRequired, isSubscribeFieldVisible } from 'subscribe-form-config'
+import { getSubscribeFormConfig } from '@/lib/subscribe-form-server'
 import { verifyTurnstileToken } from '../_lib/turnstile'
 import { sendWelcomeEmail, sendAdminSubscribeNotification } from '../_lib/email'
 import { sendWelcomeSms } from '../_lib/sms'
@@ -60,19 +62,61 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    if (!firstName || !lastName) {
+    const formConfig = await getSubscribeFormConfig()
+    const show = (key: Parameters<typeof isSubscribeFieldVisible>[1]) =>
+      isSubscribeFieldVisible(formConfig, key)
+    const need = (key: Parameters<typeof isSubscribeFieldRequired>[1]) =>
+      isSubscribeFieldRequired(formConfig, key)
+
+    if (need('firstName') && !firstName) {
       return NextResponse.json(
-        { success: false, error: 'First name and last name are required' },
+        { success: false, error: 'First name is required' },
         { status: 400, headers: corsHeaders() },
       )
     }
-    if (!email && !phone) {
+    if (need('lastName') && !lastName) {
+      return NextResponse.json(
+        { success: false, error: 'Last name is required' },
+        { status: 400, headers: corsHeaders() },
+      )
+    }
+    if (need('email') && !email) {
+      return NextResponse.json(
+        { success: false, error: 'Email is required' },
+        { status: 400, headers: corsHeaders() },
+      )
+    }
+    if (need('phone') && !phone) {
+      return NextResponse.json(
+        { success: false, error: 'Phone number is required' },
+        { status: 400, headers: corsHeaders() },
+      )
+    }
+    if ((show('email') || show('phone')) && !email && !phone) {
       return NextResponse.json(
         { success: false, error: 'Please provide at least one contact method (email or phone)' },
         { status: 400, headers: corsHeaders() },
       )
     }
-    if (!termsPrivacyAccepted) {
+    if (need('cbEmail') && !emailConsent) {
+      return NextResponse.json(
+        { success: false, error: 'Email consent is required' },
+        { status: 400, headers: corsHeaders() },
+      )
+    }
+    if (need('cbSms') && !smsAutoConsent) {
+      return NextResponse.json(
+        { success: false, error: 'SMS consent is required' },
+        { status: 400, headers: corsHeaders() },
+      )
+    }
+    if (need('cbMarketing') && !smsMarketingConsent) {
+      return NextResponse.json(
+        { success: false, error: 'Marketing consent is required' },
+        { status: 400, headers: corsHeaders() },
+      )
+    }
+    if (need('cbTerms') && !termsPrivacyAccepted) {
       return NextResponse.json(
         { success: false, error: 'You must accept the Terms & Conditions and Privacy Policy' },
         { status: 400, headers: corsHeaders() },
