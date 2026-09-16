@@ -34,8 +34,8 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button asChild size="lg">
-              <Link href="/contact">
-                Get Started
+              <Link href="/shop">
+                Shop
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
             </Button>

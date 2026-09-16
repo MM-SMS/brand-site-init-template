@@ -8,6 +8,7 @@ import { BRAND } from '@/lib/constants'
 
 const navLinks = [
   { href: '/', label: 'Home' },
+  { href: '/shop', label: 'Shop' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ]

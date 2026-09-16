@@ -8,6 +8,8 @@ This repo is a clean starting point for a new brand site, cloned each time a new
 - Tailwind v4, design tokens as CSS variables in `app/globals.css`
 - shadcn/ui primitives (config in `components.json`) — only `components/ui/button.tsx` is included; add more with `npx shadcn@latest add <component>` rather than hand-writing them, so they stay consistent with the project's shadcn config
 - Subscription forms (email/SMS) via Resend + Textbelt + Cloudflare Turnstile
+- `subscribe-form-config` (Notion field visibility/required/copy) via `github:MM-SMS/opt-in-form-settings-script`
+- `orione-pay` from `MM-SMS/payment-script` — `/shop` Buy CTA, `/payment` checkout (`PAYMENT_FLOW=stripe|custom`)
 - `redirections-lp-setup` (private git dependency) for landing-page redirects — wire up routes for it as the brand needs them; `/expired` and `not-found` are ready for campaign fallbacks
 - No auth or CMS by default. Only add Supabase/Sanity back if this specific brand actually needs login or a CMS — don't restore them out of habit
 
@@ -21,14 +23,14 @@ This repo is a clean starting point for a new brand site, cloned each time a new
 
 ## Folder structure
 
-- `app/` — routes. Home, about, contact, subscribe, unsubscribe, privacy, terms, expired; plus `not-found.tsx` for 404 / unknown campaign links. API under `app/api/subscription/`.
+- `app/` — routes. Home, shop, about, contact, subscribe, unsubscribe, privacy, terms, expired, payment, purchase success/cancel; plus `not-found.tsx` for 404 / unknown campaign links. API under `app/api/subscription/` and `app/api/orione-pay/`.
 - `components/layout/` — `header.tsx`, `footer.tsx`.
 - `components/forms/` — subscribe form body, Turnstile, auto-opening subscribe modal.
 - `components/legal/` — shared legal page helpers.
 - `components/ui/` — shadcn primitives, add via the CLI.
 - `data/` — empty placeholder, for static/seed data (e.g. content config) once the brand needs it.
 - `hooks/` — empty placeholder, for shared React hooks once the brand needs them.
-- `lib/` — `utils.ts`, `constants.ts`, `subscription-client.ts`, `subscription-modal.ts`.
+- `lib/` — `utils.ts`, `constants.ts`, `subscription-client.ts`, `subscription-modal.ts`, `subscribe-form-server.ts`, `payment.ts`.
 - `public/` — empty placeholder, for static assets (icons, images).
 - `scripts/` — empty placeholder, for DB migrations if the brand adds a database.
 - `styles/` — empty placeholder, reserved for extra stylesheets outside `app/globals.css`.

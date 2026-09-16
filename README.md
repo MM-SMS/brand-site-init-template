@@ -32,6 +32,8 @@ Brand sites stay comparable: you change `BRAND` / `LEGAL`, palette, font, and pa
 | SMS | Textbelt (optional) |
 | Captcha | Cloudflare Turnstile |
 | LP redirects | `redirections-lp-setup` (private git dependency) |
+| Subscribe form config | [`subscribe-form-config`](https://github.com/MM-SMS/opt-in-form-settings-script) |
+| Payments | [`orione-pay`](https://github.com/MM-SMS/payment-script) (`PAYMENT_FLOW=stripe\|custom`)
 
 No auth or CMS by default. Only add Supabase / Sanity if that specific brand actually needs them.
 
@@ -119,6 +121,16 @@ npm i github:MM-SMS/opt-in-form-settings-script#main @notionhq/client
 ```
 
 Without `NOTION_TOKEN` / `NOTION_SUBSCRIBE_FORM_DB_ID` the form uses package defaults. Hidden fields are not rendered; submit still sends `''` / `false`. See the [package README](https://github.com/MM-SMS/opt-in-form-settings-script) for the Notion column layout.
+
+### Payments (`orione-pay`)
+
+Checkout is wired from [`payment-script`](https://github.com/MM-SMS/payment-script) (`orione-pay`). Adapter: `lib/payment.ts`. Sample product + Buy CTA: `/shop`. Checkout: `/payment`. Success/cancel: `/purchase/success`, `/purchase/cancel`.
+
+```bash
+npm i git+ssh://git@github.com:MM-SMS/payment-script.git#path:packages/orione-pay
+```
+
+Default `PAYMENT_FLOW=custom` (no Stripe keys). Test card `4242 4242 4242 4242`, expiry `12/29`, CVV `123`. Switch to Stripe in Vercel with `PAYMENT_FLOW=stripe` plus `STRIPE_*` env. Products and theme live in `lib/payment.ts` — replace the sample SKU per brand.
 
 ### Legal
 

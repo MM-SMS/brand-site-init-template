@@ -6,19 +6,24 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "postinstall": "node scripts/ensure-orione-pay.mjs"
   },
   "dependencies": {
     "@notionhq/client": "^5.26.0",
     "@radix-ui/react-slot": "1.2.4",
+    "@stripe/react-stripe-js": "^3.11.0",
+    "@stripe/stripe-js": "^5.10.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.564.0",
     "next": "16.2.0",
+    "orione-pay": "git+ssh://git@github.com:MM-SMS/payment-script.git#path:packages/orione-pay",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "redirections-lp-setup": "git+ssh://git@github.com/MM-SMS/redirections-lp-setup.git",
     "resend": "^6.17.2",
+    "stripe": "^17.7.0",
     "subscribe-form-config": "github:MM-SMS/opt-in-form-settings-script#main",
     "tailwind-merge": "^3.3.1"
   },

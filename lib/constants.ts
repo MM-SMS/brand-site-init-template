@@ -39,6 +39,7 @@ export const SUBSCRIBE_URL = `${SITE_URL}/subscribe`
 
 export const ROUTES = {
   home: '/',
+  shop: '/shop',
   subscribe: '/subscribe',
   unsubscribe: '/unsubscribe',
   privacy: '/privacy',
@@ -47,6 +48,7 @@ export const ROUTES = {
 
 export const NAV_LINKS = [
   { href: '/', label: 'Home' },
+  { href: '/shop', label: 'Shop' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ] as const

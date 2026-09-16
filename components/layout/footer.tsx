@@ -4,6 +4,7 @@ import { BRAND } from '@/lib/constants'
 
 const footerLinks = [
   { href: '/', label: 'Home' },
+  { href: '/shop', label: 'Shop' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
   { href: '/subscribe', label: 'Subscribe' },

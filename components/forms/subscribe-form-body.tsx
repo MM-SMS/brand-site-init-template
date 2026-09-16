@@ -490,13 +490,18 @@ export function validateSubscribeForm({
 
   if (show('phone') || show('cbSms') || show('cbMarketing')) {
     if (need('phone') && !phone.trim()) e.phone = 'Phone number is required'
-    if (phone.trim()) {
-      if (show('cbSms') && !cbSms) e.cbSms = 'Required when a phone number is provided'
-      if (show('cbMarketing') && !cbMarketing) {
+    const smsConsentOk =
+      (show('cbSms') && cbSms) || (show('cbMarketing') && cbMarketing)
+    if (phone.trim() && (show('cbSms') || show('cbMarketing')) && !smsConsentOk) {
+      if (show('cbSms') && !show('cbMarketing')) {
+        e.cbSms = 'Required when a phone number is provided'
+      } else if (show('cbMarketing') && !show('cbSms')) {
         e.cbMarketing = 'Required when a phone number is provided'
+      } else {
+        e.cbSms = 'Select at least one SMS consent when a phone number is provided'
       }
     }
-    if (((show('cbSms') && cbSms) || (show('cbMarketing') && cbMarketing)) && !phone.trim()) {
+    if (smsConsentOk && !phone.trim()) {
       e.phone = 'Phone number is required when SMS consent is selected'
     }
   }
