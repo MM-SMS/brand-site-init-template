@@ -32,6 +32,7 @@ Brand sites stay comparable: you change `BRAND` / `LEGAL`, palette, font, and pa
 | SMS | Textbelt (optional) |
 | Captcha | Cloudflare Turnstile |
 | LP redirects | `redirections-lp-setup` (private git dependency) |
+| Content links `/c/{code}` | [`orione-content-link`](https://github.com/MM-SMS/orione-content-link) — Provider Samples short links, middleware out of the box |
 | Subscribe form config | [`subscribe-form-config`](https://github.com/MM-SMS/opt-in-form-settings-script) |
 | Payments | [`orione-pay`](https://github.com/MM-SMS/payment-script) (`PAYMENT_FLOW=stripe\|custom`)
 
@@ -157,6 +158,15 @@ Already included:
 
 `/go` and `lib/lp/*` appear after the package setup command (see `redirections-lp-setup` README). Env: `CAMPAIGNS_MNG_URL`, `LINK_PUBLIC_SECRET`.
 
+### Content links (`/c/{code}`, Provider Samples)
+
+[`orione-content-link`](https://github.com/MM-SMS/orione-content-link) ships in the template. Its postinstall writes
+`middleware.ts` (do not edit it — it is overwritten on every `npm install`), which resolves `/c/{code}` through the CRM
+(`GET {CAMPAIGNS_MNG_URL}/api/public/resolve/content?code=&host=`) and redirects to the article; unknown codes go to
+`/not-found`. Env: `ORIONE_CONTENT_LINK_TOKEN` (Samples API key, scope `content-links:read`) and `CAMPAIGNS_MNG_URL`
+(`https://www.orione.io` — with `www`; the prod key is rejected by `dev.orione.io`). If the brand needs its own middleware
+(e.g. Supabase sessions), use the package's `middleware.with-db.ts` template instead and keep `config.matcher` inline.
+
 ---
 
 ## Routes
@@ -245,6 +255,7 @@ Without Turnstile/Resend the form UI still loads, but submit will fail captcha/e
 - [ ] Test `/subscribe`, auto-modal, `/unsubscribe`, and emails
 - [ ] Review `/privacy` and `/terms` (dates, addresses, phone)
 - [ ] If needed: run `redirections-lp-setup`, add domain to `DOMAIN_BRAND_MAP`, drop LPs under `public/lp/`
+- [ ] Add `ORIONE_CONTENT_LINK_TOKEN` + `CAMPAIGNS_MNG_URL` in Vercel and open `/c/<a real code>` once
 - [ ] Before production: decide whether to keep `robots` on `Disallow: /`
 
 ---

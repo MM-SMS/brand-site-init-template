@@ -10,6 +10,7 @@ This repo is a clean starting point for a new brand site, cloned each time a new
 - Subscription forms (email/SMS) via Resend + Textbelt + Cloudflare Turnstile
 - `subscribe-form-config` (Notion field visibility/required/copy) via `github:MM-SMS/opt-in-form-settings-script`
 - `orione-pay` from `MM-SMS/payment-script` — `/shop` Buy CTA, `/payment` checkout (`PAYMENT_FLOW=stripe|custom`)
+- `orione-content-link` from `MM-SMS/orione-content-link` — `/c/{code}` Provider Samples links; its postinstall owns `middleware.ts` (never hand-edit it), env `ORIONE_CONTENT_LINK_TOKEN` + `CAMPAIGNS_MNG_URL`
 - `redirections-lp-setup` (private git dependency) for landing-page redirects — wire up routes for it as the brand needs them; `/expired` and `not-found` are ready for campaign fallbacks
 - No auth or CMS by default. Only add Supabase/Sanity back if this specific brand actually needs login or a CMS — don't restore them out of habit
 
