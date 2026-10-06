@@ -25,7 +25,7 @@ const TOC = [
   '4. How We Use Information',
   '5. Email and SMS Communications',
   '6. How We Disclose Information',
-  '7. Third-Party Links, Affiliate Offers, and External Services',
+  '7. Third-Party Links and External Services',
   '8. Data Retention',
   '9. Cookies, Analytics, and Similar Technologies',
   '10. Data Security',
@@ -118,7 +118,7 @@ export default function PrivacyPage() {
                 'Usage and interaction information, such as pages or articles viewed, links clicked, forms started or submitted, referring and exit pages, timestamps, session duration, scrolling, content engagement, and interactions with email or SMS links.',
                 'Internet and network information, such as IP address, general location inferred from IP address, network provider, and diagnostic logs.',
                 'Cookie and similar technology information collected through cookies, pixels, tags, software development kits, local storage, and comparable technologies, as described in Section 9.',
-                'Campaign and attribution information, such as referral source, campaign identifiers, affiliate parameters, advertising identifiers, and conversion or performance events.',
+                'Campaign and attribution information, such as traffic source, campaign identifiers, advertising identifiers, and conversion or performance events.',
               ]}
             />
 
@@ -128,7 +128,7 @@ export default function PrivacyPage() {
               items={[
                 'Vendors that help operate the Services, including hosting, content management, security, fraud prevention, analytics, forms, customer support, email delivery (such as Resend), SMS delivery (such as Textbelt), captcha verification (such as Cloudflare Turnstile), and data storage providers.',
                 'Advertising, attribution, and measurement partners, if enabled, which may provide aggregated, pseudonymous, or event-level reporting about traffic, engagement, and campaign performance.',
-                'Partners or advertisers when you expressly request, authorize, or initiate a connection, including through a clearly disclosed co-branded form or user-directed referral.',
+                'Partners or advertisers when you expressly request, authorize, or initiate a connection, including through a clearly disclosed co-branded form or other user-directed request.',
                 'Publicly available sources and lawful business sources, where permitted by law.',
               ]}
             />
@@ -308,12 +308,10 @@ export default function PrivacyPage() {
             </p>
           </LegalSection>
 
-          <LegalSection id="third-party" title="7. Third-Party Links, Affiliate Offers, and External Services">
+          <LegalSection id="third-party" title="7. Third-Party Links and External Services">
             <p>
-              The Services may include links to advertisers, affiliate merchants, sponsors, telehealth
-              providers, marketplaces, social networks, applications, or other third-party services. We
-              may receive compensation when you click a link, submit a form, or complete a transaction
-              with a third party.
+              The Services may include links to advertisers, telehealth
+              providers, marketplaces, social networks, applications, or other third-party services.
             </p>
             <p>
               Third parties operate independently and may collect information directly from you. Their
@@ -353,7 +351,7 @@ export default function PrivacyPage() {
                 'Remember preferences and settings stored in your browser.',
                 'Maintain sessions and account state.',
                 'Understand traffic, navigation, engagement, and performance.',
-                'Measure campaigns, referrals, conversions, and affiliate attribution.',
+                'Measure campaigns, conversions, and attribution.',
                 'Detect fraud, abuse, bots, and security threats.',
                 'Provide analytics and, if enabled, advertising or personalization.',
               ]}

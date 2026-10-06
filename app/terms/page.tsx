@@ -28,21 +28,20 @@ const TOC = [
   '6. Email Communications',
   '7. SMS / Mobile Messaging Program Terms',
   '8. Interactive Features, Quizzes, Challenges, and Tools',
-  '10. User Submissions and Feedback',
-  '11. Third-Party Links, Products, Services, and Partners',
-  '12. Affiliate, Referral, Advertising, and Sponsored Content',
-  '13. Purchases, Billing, and Refunds',
-  '14. Intellectual Property',
-  '15. Copyright Complaints',
-  '16. Privacy',
-  '17. Disclaimer of Warranties',
-  '18. Limitation of Liability',
-  '19. Indemnification',
-  '20. Suspension and Termination',
-  '21. Changes to the Services or These Terms',
-  '22. Governing Law and Venue',
-  '23. General Provisions',
-  '24. Contact',
+  '9. User Submissions and Feedback',
+  '10. Third-Party Links, Products, Services, and Partners',
+  '11. Purchases, Billing, and Refunds',
+  '12. Intellectual Property',
+  '13. Copyright Complaints',
+  '14. Privacy',
+  '15. Disclaimer of Warranties',
+  '16. Limitation of Liability',
+  '17. Indemnification',
+  '18. Suspension and Termination',
+  '19. Changes to the Services or These Terms',
+  '20. Governing Law and Venue',
+  '21. General Provisions',
+  '22. Contact',
 ]
 
 export default function TermsPage() {
@@ -122,7 +121,7 @@ export default function TermsPage() {
                 'Onboarding quizzes, personal path recommendations, and weekly check-ins',
                 'Habit planners, challenges, calculators, and smart-selection tools',
                 'PDF plan exports and interactive explore content',
-                'Affiliate links, sponsored content, and references to third-party services',
+                'References to third-party services',
               ]}
             />
             <p>
@@ -283,7 +282,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection id="submissions" title="10. User Submissions and Feedback">
+          <LegalSection id="submissions" title="9. User Submissions and Feedback">
             <p>
               If you submit comments, questions, suggestions, ideas, testimonials, reviews, images,
               content, or other materials (&quot;Submissions&quot;), you represent that you have the
@@ -308,7 +307,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection id="third-party" title="11. Third-Party Links, Products, Services, and Partners">
+          <LegalSection id="third-party" title="10. Third-Party Links, Products, Services, and Partners">
             <p>
               The Services may link to or reference independent third-party websites, products,
               merchants, advertisers, applications, telehealth providers, marketplaces, or other
@@ -328,24 +327,8 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection
-            id="affiliate"
-            title="12. Affiliate, Referral, Advertising, and Sponsored Content Disclosure"
-          >
-            <p>
-              Some links, recommendations, placements, articles, emails, SMS messages, or other content
-              may be sponsored, paid, affiliate-based, or referral-based. {BRAND.name} may receive
-              compensation when you view, click, register, submit information, purchase, or take another
-              action through those materials.
-            </p>
-            <p>
-              Compensation may influence which products, services, or partners are presented, but it
-              does not change your responsibility to conduct independent evaluation. We aim to disclose
-              material relationships in a clear and reasonably prominent manner where required.
-            </p>
-          </LegalSection>
 
-          <LegalSection id="purchases" title="13. Purchases, Billing, and Refunds">
+          <LegalSection id="purchases" title="11. Purchases, Billing, and Refunds">
             <p className="font-medium text-foreground">No Direct Sales / Third-Party Purchases</p>
             <p>
               {BRAND.name} does not directly sell the third-party products or services promoted through
@@ -356,7 +339,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection id="ip" title="14. Intellectual Property">
+          <LegalSection id="ip" title="12. Intellectual Property">
             <p>
               The Services and their content—including text, articles, graphics, designs, interfaces,
               logos, trademarks, photographs, videos, audio, code, databases, compilations, and other
@@ -381,7 +364,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection id="copyright" title="15. Copyright Complaints">
+          <LegalSection id="copyright" title="13. Copyright Complaints">
             <p>
               If you believe content on the Services infringes your copyright, send a notice to{' '}
               <LegalMail email={LEGAL.copyrightEmail} /> containing sufficient information to identify
@@ -391,7 +374,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection id="privacy" title="16. Privacy">
+          <LegalSection id="privacy" title="14. Privacy">
             <p>
               Our Privacy Policy explains how we collect, use, disclose, and protect personal information
               and is incorporated into these Terms. The Privacy Policy is available at{' '}
@@ -399,7 +382,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection id="disclaimer" title="17. Disclaimer of Warranties">
+          <LegalSection id="disclaimer" title="15. Disclaimer of Warranties">
             <LegalCallout>
               THE SERVICES ARE PROVIDED &quot;AS IS&quot; AND &quot;AS AVAILABLE,&quot; WITH ALL FAULTS
               AND WITHOUT GUARANTEES OF ANY KIND.
@@ -421,7 +404,7 @@ export default function TermsPage() {
             <p>Some jurisdictions do not allow certain warranty exclusions, so some exclusions may not apply to you.</p>
           </LegalSection>
 
-          <LegalSection id="liability" title="18. Limitation of Liability">
+          <LegalSection id="liability" title="16. Limitation of Liability">
             <LegalCallout>
               TO THE MAXIMUM EXTENT PERMITTED BY LAW, {BRAND.name.toUpperCase()} AND ITS AFFILIATES,
               LICENSORS, SERVICE PROVIDERS, PARTNERS, OFFICERS, DIRECTORS, EMPLOYEES, AND AGENTS WILL
@@ -437,7 +420,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection id="indemnification" title="19. Indemnification">
+          <LegalSection id="indemnification" title="17. Indemnification">
             <p>
               To the extent permitted by law, you agree to defend, indemnify, and hold harmless{' '}
               {BRAND.name}, {LEGAL.entityName}, and their affiliates, licensors, service providers,
@@ -461,7 +444,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection id="termination" title="20. Suspension and Termination">
+          <LegalSection id="termination" title="18. Suspension and Termination">
             <p>
               We may suspend, restrict, or terminate access to all or part of the Services if we
               reasonably believe you violated these Terms, created risk or possible legal exposure,
@@ -474,7 +457,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection id="changes" title="21. Changes to the Services or These Terms">
+          <LegalSection id="changes" title="19. Changes to the Services or These Terms">
             <p>
               We may update the Services and these Terms from time to time. We will revise the &quot;Last
               updated&quot; date and provide additional notice when required by law. Material changes
@@ -487,7 +470,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection id="governing-law" title="22. Governing Law and Venue">
+          <LegalSection id="governing-law" title="20. Governing Law and Venue">
             <p>
               These Terms and any dispute arising out of or relating to the Services are governed by the
               laws of the State of {LEGAL.state}, without regard to conflict-of-law principles, except
@@ -502,7 +485,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection id="general" title="23. General Provisions">
+          <LegalSection id="general" title="21. General Provisions">
             <p className="font-medium text-foreground">Entire Agreement</p>
             <p>
               These Terms, the Privacy Policy, and any feature-specific terms or disclosures constitute
@@ -540,7 +523,7 @@ export default function TermsPage() {
             </p>
           </LegalSection>
 
-          <LegalSection id="contact" title="24. Contact">
+          <LegalSection id="contact" title="22. Contact">
             <p>Questions about these Terms may be sent to:</p>
             <LegalList
               items={[
