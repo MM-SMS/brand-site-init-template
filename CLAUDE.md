@@ -12,6 +12,7 @@ This repo is a clean starting point for a new brand site, cloned each time a new
 - `orione-pay` from `MM-SMS/payment-script` — `/shop` Buy CTA, `/payment` checkout (`PAYMENT_FLOW=stripe|custom`)
 - `orione-content-link` from `MM-SMS/orione-content-link` — `/c/{code}` Provider Samples links; its postinstall owns `middleware.ts` (never hand-edit it), env `ORIONE_CONTENT_LINK_TOKEN` + `CAMPAIGNS_MNG_URL`
 - `redirections-lp-setup` (private git dependency) for landing-page redirects — wire up routes for it as the brand needs them; `/expired` and `not-found` are ready for campaign fallbacks
+- Design toolchain ships in the repo: `.claude/skills/design-taste-frontend` (taste-skill, scripts via `npx -y node@22`), `.claude/skills/impeccable` + `.claude/agents` + hooks in `.claude/settings.json` (`/impeccable init` first), `framer-motion`, `three`, `.mcp.json` for 21st.dev (`API_KEY_21ST`), `scripts/get-design-md.mjs` for reference `DESIGN.md` files. Each brand keeps `DESIGN.md` + `PRODUCT.md` in the root; never reuse fonts, icons, motifs or section order from another brand
 - No auth or CMS by default. Only add Supabase/Sanity back if this specific brand actually needs login or a CMS — don't restore them out of habit
 
 ## First things to customize for a new brand

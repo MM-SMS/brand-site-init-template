@@ -158,6 +158,21 @@ Already included:
 
 `/go` and `lib/lp/*` appear after the package setup command (see `redirections-lp-setup` README). Env: `CAMPAIGNS_MNG_URL`, `LINK_PUBLIC_SECRET`.
 
+### Design tooling
+
+The template ships the design toolchain every brand build uses (see `docs/spec-4-references.md` in the MMSMS workspace):
+
+| Tool | Where | Use |
+|---|---|---|
+| [taste-skill](https://github.com/Leonxlnx/taste-skill) (`design-taste-frontend`) | `.claude/skills/design-taste-frontend` | Art direction: `scripts/draw.mjs` deals researched directions, `scripts/inspect.mjs` checks the page in a real browser. Scripts need Node 22: `npx -y node@22 .claude/skills/design-taste-frontend/scripts/draw.mjs …` |
+| [impeccable](https://github.com/pbakaus/impeccable) | `.claude/skills/impeccable`, `.claude/agents`, hooks in `.claude/settings.json` | `/impeccable init` writes `PRODUCT.md`; `shape`, `craft`, `critique`, `audit`, `polish`, `animate`, `document` (generates `DESIGN.md`). The engine binary is not committed — the launcher downloads it to `~/.impeccable/bin` on first run |
+| [img2threejs](https://github.com/img2threejs/img2threejs) | user-level skill: `npx --yes img2threejs@latest install` (needs Python ≥ 3.10) | Reference image → procedural Three.js model; `three` + `@types/three` are already dependencies |
+| [framer-motion](https://www.npmjs.com/package/framer-motion) | dependency | React animations: reveals, layout, gestures, scroll-driven, page transitions |
+| [21st.dev](https://21st.dev/) | `.mcp.json` (MCP) + `npx @21st-dev/cli` | Search/install crafted components: `21st search "bento grid"`, `21st add <user>/<slug>`. Needs `API_KEY_21ST` (MCP) or `21st login` (CLI) |
+| [awesome-design-md](https://github.com/voltagent/awesome-design-md) | `scripts/get-design-md.mjs` | `node scripts/get-design-md.mjs stripe linear.app` pulls reference `DESIGN.md` files into `design/references/` |
+
+Every brand keeps its own `DESIGN.md` (tokens, type, shapes, motion, bans, sources) and `PRODUCT.md` in the repo root; brand sites must not share fonts, icons, motifs or section order with each other.
+
 ### Content links (`/c/{code}`, Provider Samples)
 
 [`orione-content-link`](https://github.com/MM-SMS/orione-content-link) ships in the template. Its postinstall writes
@@ -231,6 +246,7 @@ Copy `.env.example` → `.env.local`:
 | `SITE_URL` | Absolute links inside emails |
 | `CAMPAIGNS_MNG_URL` | LP resolve (after wiring redirections) |
 | `LINK_PUBLIC_SECRET` | Auth for campaigns public API |
+| `API_KEY_21ST` | 21st.dev MCP key (`.mcp.json`), from https://21st.dev/settings/api-keys — local only |
 
 Without Turnstile/Resend the form UI still loads, but submit will fail captcha/email checks — use real keys for an end-to-end test.
 
@@ -249,7 +265,7 @@ Without Turnstile/Resend the form UI still loads, but submit will fail captcha/e
 
 - [ ] Clone / fork this template
 - [ ] Fill `BRAND` and `LEGAL` in `lib/constants.ts`
-- [ ] Set colors in `globals.css`, font in `layout.tsx`
+- [ ] Run `/impeccable init`, write `DESIGN.md` from the card's references (spec-4), then set tokens in `globals.css` and fonts in `app/fonts`
 - [ ] Replace home / about / contact copy
 - [ ] Configure `.env.local` + Cloudflare Turnstile site + Resend domain
 - [ ] Test `/subscribe`, auto-modal, `/unsubscribe`, and emails
@@ -267,6 +283,7 @@ npm run dev      # local development
 npm run build    # production build
 npm run start    # serve production build
 npm run lint     # eslint
+node scripts/get-design-md.mjs --list   # reference DESIGN.md files from awesome-design-md
 ```
 
 ---

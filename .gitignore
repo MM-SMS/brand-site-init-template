@@ -20,3 +20,8 @@ node_modules
 
 # Local reference copy — not part of the template
 brand-site-init-template/
+
+# Impeccable engine binary (platform-specific, downloaded by the launcher on first run)
+.claude/skills/impeccable/scripts/bin/
+# Per-developer Claude Code settings
+.claude/settings.local.json
